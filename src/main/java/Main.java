@@ -1,5 +1,5 @@
-import messageCoders.GammingMessageCoder;
-import messageCoders.MessageCoder;
+import message.coder.GammingMessageCoder;
+import message.coder.MessageCoder;
 import util.RandomPrimaryNumberGenerator;
 
 import java.util.Arrays;

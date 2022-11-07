@@ -1,6 +1,4 @@
-package messageCoders;
-
-import messageCoders.MessageCoder;
+package message.coder;
 
 import java.util.Random;
 
