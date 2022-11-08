@@ -1,3 +1,5 @@
+package eds;
+
 import model.Key;
 
 public interface ElectronicDigitalSignature {

@@ -1,19 +1,23 @@
+package eds;
+
+import eds.ElectronicDigitalSignature;
 import model.Key;
 import model.KeyPair;
+import util.DataConfiguration;
 import util.MathUtils;
 import util.RandomPrimaryNumberGenerator;
 import java.util.Arrays;
 
-public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature{
+public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature {
 
     private Key publicKey;
     private final RandomPrimaryNumberGenerator randomPrimaryNumberGenerator;
 
     private final char[] alphabet;
 
-    public ElectronicDigitalSignatureRsa(RandomPrimaryNumberGenerator randomPrimaryNumberGenerator, char[] alphabet) {
-        this.randomPrimaryNumberGenerator = randomPrimaryNumberGenerator;
-        this.alphabet = alphabet;
+    public ElectronicDigitalSignatureRsa() {
+        this.randomPrimaryNumberGenerator = new RandomPrimaryNumberGenerator(10_000);
+        this.alphabet = DataConfiguration.alphabet;
     }
 
 

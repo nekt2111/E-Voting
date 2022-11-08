@@ -1,22 +1,22 @@
 package message.coder;
 
+import util.DataConfiguration;
+
 import java.util.Random;
 
 public class GammingMessageCoder implements MessageCoder {
 
     private final char[] alphabet;
-    private final int key;
 
-    public GammingMessageCoder(char[] alphabet, int key) {
-        this.alphabet = alphabet;
-        this.key = key;
+    public GammingMessageCoder() {
+        this.alphabet = DataConfiguration.alphabet;
     }
 
     @Override
-    public String encode(String message) {
+    public String encode(String message, int key) {
 
         char[] messageCharArray = message.toCharArray();
-        char[] randomCharArray = generatePseudoRandomSequence(message);
+        char[] randomCharArray = generatePseudoRandomSequence(message, key);
 
         char[] resultedCharArray = new char[message.length()];
 
@@ -34,9 +34,9 @@ public class GammingMessageCoder implements MessageCoder {
     }
 
     @Override
-    public String decode(String codedMessage) {
+    public String decode(String codedMessage, int key) {
         char[] codedMessageCharArray = codedMessage.toCharArray();
-        char[] randomCharArray = generatePseudoRandomSequence(codedMessage);
+        char[] randomCharArray = generatePseudoRandomSequence(codedMessage, key);
 
         char[] resultedCharArray = new char[codedMessage.length()];
 
@@ -53,7 +53,7 @@ public class GammingMessageCoder implements MessageCoder {
         return String.valueOf(resultedCharArray);
     }
 
-    private char[] generatePseudoRandomSequence(String message) {
+    private char[] generatePseudoRandomSequence(String message, int key) {
         Random random = new Random(key);
 
         char[] generatedChars = new char[message.length()];
@@ -73,6 +73,6 @@ public class GammingMessageCoder implements MessageCoder {
             }
         }
 
-        throw new IllegalArgumentException("We don't have this character in our alphabet");
+        throw new IllegalArgumentException("We don't have this character in our alphabet - " + character);
     }
 }
