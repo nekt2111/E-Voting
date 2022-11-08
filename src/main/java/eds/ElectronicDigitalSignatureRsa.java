@@ -22,8 +22,7 @@ public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature
 
 
     @Override
-    public long[] generateEds() {
-        String message = generateMessage();
+    public long[] generateEds(String message) {
         KeyPair keyPair = this.generateKeyPair();
 
         long[] messageHashes = getHashesFromMessage(message, keyPair.getGeneralPart());
@@ -84,9 +83,7 @@ public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature
     }
 
     @Override
-    public boolean checkEds(long[] eds, Key publicKey) {
-
-        String message = generateMessage();
+    public boolean checkEds(String message, long[] eds, Key publicKey) {
 
         long[] messageHashes = getHashesFromMessage(message, publicKey.getGeneralPart());
 

@@ -15,9 +15,7 @@ public class RandomPrimaryNumberGenerator {
     public int getRandomPrimeNumber() {
         Random random = new Random();
         int randomInt = random.nextInt(0, primeNumbers.size() - 1);
-        int randomPrime = primeNumbers.get(randomInt);
-        System.out.println("Random prime number - "  + randomPrime);
-        return randomPrime;
+        return primeNumbers.get(randomInt);
     }
 
     private static List<Integer> generateListOfPrimeNumbers(Integer amountOfRandomPrimeNumbers) {

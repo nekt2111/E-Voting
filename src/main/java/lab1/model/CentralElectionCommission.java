@@ -1,7 +1,5 @@
 package lab1.model;
 
-import lombok.Data;
-
 import java.util.*;
 
 public class CentralElectionCommission {
@@ -23,16 +21,55 @@ public class CentralElectionCommission {
         }
     }
 
-    public void receiveBulletin(Bulletin bulletin) {
-
-    }
 
     public void endElections(Elections elections) {
         if (elections != null) {
+            Map<Candidate, Integer> candidateVotes = new HashMap<>();
+            for (Candidate candidate : elections.getCandidates()) {
+                candidateVotes.put(candidate, countVotesForCandidate(candidate, elections));
+            }
+
+            System.out.println("Amount of votes for candidates - " + candidateVotes);
+
+            if (allCandidatesHaveSameAmountOfVotes(candidateVotes)) {
+                System.out.println("No one won. Every candidate has same amount of votes");
+            } else {
+                System.out.println("Winner is - " + getCandidateWithMostVotes(candidateVotes).getName());
+            }
 
         } else {
             throw new IllegalArgumentException("Elections were not configured!");
         }
+    }
+
+    private boolean allCandidatesHaveSameAmountOfVotes(Map<Candidate, Integer> candidateVotes) {
+        Integer firstCandidateVoteAmount = new ArrayList<>(candidateVotes.values()).get(0);
+        return candidateVotes.values().stream().allMatch(amount -> Objects.equals(amount, firstCandidateVoteAmount));
+    }
+
+    private Candidate getCandidateWithMostVotes(Map<Candidate, Integer> candidateVotes) {
+
+        List<Candidate> candidates = new ArrayList<>(candidateVotes.keySet());
+        Candidate winner = candidates.get(0);
+
+        for (Candidate candidate : candidateVotes.keySet()) {
+            if (candidateVotes.get(candidate) > candidateVotes.get(winner)) {
+                winner = candidate;
+            }
+        }
+        return winner;
+    }
+
+    private int countVotesForCandidate(Candidate candidate, Elections elections) {
+
+        int amount = 0;
+
+        for (Bulletin bulletin : elections.getBulletins()) {
+            if (bulletin.getSelectedCandidate().getName().equals(candidate.getName())) {
+                amount++;
+            }
+        }
+        return amount;
     }
 
     private Elections initElections(List<Candidate> candidates,
@@ -74,10 +111,6 @@ public class CentralElectionCommission {
 
     private static void sendBulletinToVoter(Voter voter, Bulletin bulletin) {
         voter.setBulletin(bulletin);
-    }
-
-    private static Voter findVoterById(Integer id, Elections elections) {
-        return elections.getVoters().stream().filter(voter -> voter.getId().equals(id)).findFirst().get();
     }
 
     private static Bulletin findBulletinByVoterId(Integer id, Elections elections) {

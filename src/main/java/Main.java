@@ -19,10 +19,10 @@ public class Main {
         System.out.println(decodedMessage);
 
         ElectronicDigitalSignature eds = new ElectronicDigitalSignatureRsa();
-        long[] edsArray = eds.generateEds();
+     /*   long[] edsArray = eds.generateEds();
 
         System.out.println(Arrays.toString(edsArray));
-        System.out.println(eds.checkEds(edsArray, eds.getOpenKey()));
+        System.out.println(eds.checkEds(edsArray, eds.getOpenKey()));*/
 
     }
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import message.coder.GammingMessageCoder;
 import message.coder.MessageCoder;
 
+import java.util.Arrays;
+
 @Data
 public class Voter {
     private Integer id;
@@ -32,21 +34,23 @@ public class Voter {
     }
 
     public void signBulletin() {
-        bulletin.setEds(electronicDigitalSignature.generateEds());
+        long[] eds = electronicDigitalSignature.generateEds(bulletin.toPreCodedString());
+        bulletin.setEds(electronicDigitalSignature.generateEds(bulletin.toPreCodedString()));
+        System.out.println("Bulletin was signed with eds - " + Arrays.toString(eds));
     }
 
     public void sendCodedBulletin(Elections elections) {
         if (bulletin != null) {
-            elections.receiveCodedBulletinFromVoter(codedBulletin, id);
+            elections.receiveCodedBulletinFromVoter(codedBulletin, id, electronicDigitalSignature.getOpenKey());
         } else {
             throw new IllegalStateException("You don't have bulletin to send!");
         }
     }
 
     private void codeBulletin() {
-        String preCodedBulletin = String.format("%d,%s,%d", bulletin.getVoterId(), bulletin.getSelectedCandidate().getName(), cecKey);
+        String preCodedBulletin = String.format("%d,%s,%d.%s", bulletin.getVoterId(), bulletin.getSelectedCandidate().getName(), cecKey, Arrays.toString(bulletin.getEds()));
         this.codedBulletin = messageCoder.encode(preCodedBulletin, cecKey);
-        System.out.println(this.codedBulletin);
+        System.out.println("Coded bulletin - " + this.codedBulletin);
     }
 
     private void selectCandidate(Candidate candidate) {

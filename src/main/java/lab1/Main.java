@@ -1,10 +1,7 @@
 package lab1;
 
 import lab1.mock.data.MockDataGenerator;
-import lab1.model.Candidate;
-import lab1.model.CentralElectionCommission;
-import lab1.model.Elections;
-import lab1.model.Voter;
+import lab1.model.*;
 
 import java.util.List;
 
@@ -19,14 +16,35 @@ public class Main {
 
         Elections elections = cec.createElections(candidates, voters);
 
-        System.out.println(elections.getBulletins());
-
         cec.startElections(elections);
 
-        Voter voter = voters.get(0);
-        System.out.println(voter);
+        Candidate firstCandidate = elections.getCandidates().get(0);
+        Candidate secondCandidate = elections.getCandidates().get(1);
+
+        Voter voter1 = voters.get(0);
+        Voter voter2 = voters.get(1);
+        Voter voter3 = voters.get(2);
+        voter1.vote(elections, secondCandidate);
+        voter2.vote(elections, firstCandidate);
+        voter3.vote(elections, firstCandidate);
+
+        // 1. Vote, who cannot
+/*
+        try {
+            Voter testVoter = new Voter(3, new Person("Nikita Linovytskyi"));
+            testVoter.vote(elections, elections.getCandidates().get(0));
+        }
+         catch (Exception e) {
+             System.out.println(e.getMessage());
+         }*/
+
+        // 2. Trying to vote two times
+
+       /* Voter voter = voters.get(0);
         voter.vote(elections, elections.getCandidates().get(0));
-        System.out.println(elections.getBulletins());
+        voter.vote(elections, elections.getCandidates().get(0));*/
+
+        cec.endElections(elections);
 
     }
 

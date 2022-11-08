@@ -19,6 +19,12 @@ public class Bulletin {
         this.candidates = candidates;
     }
 
+    public void setEds(long[] eds) {
+        if (eds != null) {
+            this.eds = eds;
+        }
+    }
+
     public String toPreCodedString() {
         return String.format("%d,%s", voterId, selectedCandidate.getName());
     }

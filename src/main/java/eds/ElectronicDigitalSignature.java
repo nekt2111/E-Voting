@@ -4,9 +4,9 @@ import model.Key;
 
 public interface ElectronicDigitalSignature {
 
-    long[] generateEds();
+    long[] generateEds(String message);
 
-    boolean checkEds(long[] eds, Key openKey);
+    boolean checkEds(String message, long[] eds, Key openKey);
 
     Key getOpenKey();
 

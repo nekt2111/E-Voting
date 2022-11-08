@@ -1,11 +1,16 @@
 package lab1.model;
 
+import eds.ElectronicDigitalSignature;
+import eds.ElectronicDigitalSignatureRsa;
 import lombok.Data;
 import message.coder.GammingMessageCoder;
 import message.coder.MessageCoder;
+import model.Key;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 public class Elections {
@@ -18,9 +23,11 @@ public class Elections {
     private Map<Integer, Integer> voterPublicKeyMap;
 
     private static int MIN_AMOUNT_OF_CANDIDATES = 2;
-    private static int MIN_AMOUNT_OF_VOTERS = 2;
+    private static int MIN_AMOUNT_OF_VOTERS = 8;
 
     private static MessageCoder messageCoder = new GammingMessageCoder();
+
+    private static ElectronicDigitalSignature electronicDigitalSignature = new ElectronicDigitalSignatureRsa();
 
     public Elections(List<Candidate> candidates,
                      List<Voter> voters) {
@@ -33,14 +40,55 @@ public class Elections {
         }
     }
 
-    public void receiveCodedBulletinFromVoter(String codedBulletin, Integer voterId) {
-        String str = messageCoder.decode(codedBulletin, voterPublicKeyMap.get(voterId));
-        if (str.contains(String.valueOf(voterPublicKeyMap.get(voterId)))) {
-            String[] strs = str.split(",");
-            Bulletin bulletin = new Bulletin(Integer.parseInt(strs[0]), candidates);
-            bulletin.setSelectedCandidate(candidates.stream().filter(candidate -> candidate.getName().equals(strs[1])).findFirst().get());
-            bulletins.add(bulletin);
+    public void receiveCodedBulletinFromVoter(String codedBulletin, Integer voterId, Key edsPublicKey) {
+        String decodedBulletin = messageCoder.decode(codedBulletin, voterPublicKeyMap.get(voterId));
+        System.out.println("Received decoded bulletin - " + decodedBulletin);
+        if (containsVoterPublicKey(decodedBulletin, voterId)) {
+           Bulletin receivedBulletin = deserializeDecodedBulletinStr(decodedBulletin);
+
+           if (isEdsCorrect(receivedBulletin, edsPublicKey) && !wasBulletinFromVoterAlreadyReceived(receivedBulletin)) {
+               saveBulletin(receivedBulletin);
+           } else if (wasBulletinFromVoterAlreadyReceived(receivedBulletin)) {
+               System.out.println("Bulletin was already received!");
+           }
+           else {
+               System.out.println("Bulletin is ignored. Eds is not correct");
+           }
         }
+    }
+
+    private boolean isEdsCorrect(Bulletin bulletin, Key publicKey) {
+        boolean result = electronicDigitalSignature.checkEds(bulletin.toPreCodedString(), bulletin.getEds(), publicKey);
+        System.out.println("Checking bulletin's eds with public key - " + publicKey + ". Result - " + result);
+        return result;
+    }
+
+    private boolean wasBulletinFromVoterAlreadyReceived(Bulletin receivedBulletin) {
+        return bulletins.stream().map(Bulletin::getVoterId).toList().contains(receivedBulletin.getVoterId());
+    }
+
+    private void saveBulletin(Bulletin bulletin) {
+        bulletins.add(bulletin);
+        System.out.println("Bulletin was saved");
+    }
+
+    private boolean containsVoterPublicKey(String decodedBulletin, Integer voterId) {
+       String publicKey = String.valueOf(voterPublicKeyMap.get(voterId));
+       return decodedBulletin.contains(publicKey);
+    }
+
+    private Bulletin deserializeDecodedBulletinStr(String decodedBulletin) {
+        String[] values = decodedBulletin.split(",");
+        Bulletin bulletin = new Bulletin(Integer.parseInt(values[0]), candidates);
+        bulletin.setSelectedCandidate(candidates.stream().filter(candidate -> candidate.getName().equals(values[1])).findFirst().get());
+        bulletin.setEds(getEdsFromDecodedBulletin(decodedBulletin));
+        return bulletin;
+    }
+
+    private long[] getEdsFromDecodedBulletin(String decodedBulletin) {
+        String edsArray = decodedBulletin.split("\\.")[1];
+        String edsSequence = edsArray.replace("[", "").replace("]","").replace(" ", "");
+        return Arrays.stream(edsSequence.split(",")).mapToLong(Long::parseLong).toArray();
     }
 
     private static boolean isCandidatesListValid(List<Candidate> candidates) {
