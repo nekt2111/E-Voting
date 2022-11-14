@@ -5,6 +5,7 @@ import eds.ElectronicDigitalSignatureRsa;
 import lombok.Data;
 import message.coder.GammingMessageCoder;
 import message.coder.MessageCoder;
+import model.Person;
 
 import java.util.Arrays;
 

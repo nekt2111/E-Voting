@@ -1,10 +1,9 @@
 package lab1.mock.data;
 
 import lab1.model.Candidate;
-import lab1.model.Person;
 import lab1.model.Voter;
+import model.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MockDataGenerator {
