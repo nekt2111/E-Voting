@@ -1,13 +1,12 @@
 package message.coder;
 
 import model.Key;
-import model.KeyPair;
 import util.DataConfiguration;
 import util.MathUtils;
 import util.RandomPrimaryNumberGenerator;
 
-import java.util.Map;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static util.MathUtils.eulerFunction;
 import static util.MathUtils.gcd;
@@ -18,21 +17,37 @@ public class RsaCoder {
 
     private final int MAX_VALUE_OF_RANDOM_INT = 1_000;
 
+    private int p, q, n, z, e, d, r;
+    private ArrayList<Integer> alphabetIndexesOfChars;
+
     private Key privateKey;
 
     public RsaCoder() {
         this.alphabet = DataConfiguration.alphabet;
+        this.alphabetIndexesOfChars = new ArrayList<>();
+        generateKeys();
     }
 
-    public long[] encode(String message) {
+    public long[] code(String message) {
+        char[] messageCharArray = message.toCharArray();
+        long[] encodedCharArray = new long[message.length()];
+
+        for (int i = 0; i < messageCharArray.length; i++) {
+            int m = getIndexOfCharInAlphabet(messageCharArray[i]);
+            encodedCharArray[i] = MathUtils.modPow(m, e, n);
+        }
+
+        return encodedCharArray;
+    }
+
+    public void generateKeys() {
         RandomPrimaryNumberGenerator primaryNumberGenerator = new RandomPrimaryNumberGenerator(MAX_VALUE_OF_RANDOM_INT);
 
-        int p = primaryNumberGenerator.getRandomPrimeNumber();
-        int q = primaryNumberGenerator.getRandomPrimeNumber();
-        int n = p * q;
-        int z = (int) eulerFunction(p, q);
-        int e;
-        int d = 0;
+        p = primaryNumberGenerator.getRandomPrimeNumber();
+        q = primaryNumberGenerator.getRandomPrimeNumber();
+        n = p * q;
+        z = (int) eulerFunction(p, q);
+        d = 0;
 
         for (e = 2; e < z; e++) {
 
@@ -52,16 +67,6 @@ public class RsaCoder {
         }
 
         privateKey = new Key(d, n);
-
-        char[] messageCharArray = message.toCharArray();
-        long[] encodedCharArray = new long[message.length()];
-
-        for (int i = 0; i < messageCharArray.length; i++) {
-            int m = getIndexOfCharInAlphabet(messageCharArray[i]);
-            encodedCharArray[i] = MathUtils.modPow(m, e, n);
-        }
-
-        return encodedCharArray;
     }
 
     public String decode(long[] encodedMsg, Key privateKey) {

@@ -11,6 +11,8 @@ import java.util.Arrays;
 public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature {
 
     private Key publicKey;
+
+    private KeyPair keyPair;
     private final RandomPrimaryNumberGenerator randomPrimaryNumberGenerator;
 
     private final char[] alphabet;
@@ -18,13 +20,12 @@ public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature
     public ElectronicDigitalSignatureRsa() {
         this.randomPrimaryNumberGenerator = new RandomPrimaryNumberGenerator(10_000);
         this.alphabet = DataConfiguration.alphabet;
+        this.keyPair = generateKeyPair();
     }
 
 
     @Override
     public long[] generateEds(String message) {
-        KeyPair keyPair = this.generateKeyPair();
-
         long[] messageHashes = getHashesFromMessage(message, keyPair.getGeneralPart());
 
         long[] egs = new long[messageHashes.length];
@@ -79,11 +80,17 @@ public class ElectronicDigitalSignatureRsa implements ElectronicDigitalSignature
             }
         }
 
-        throw new IllegalArgumentException("We don't have this character in our alphabet");
+        throw new IllegalArgumentException("We don't have this character in our alphabet - " + character);
     }
 
     @Override
     public boolean checkEds(String message, long[] eds, Key publicKey) {
+
+        System.out.println("Checking eds...");
+
+        if (eds == null) {
+            return false;
+        }
 
         long[] messageHashes = getHashesFromMessage(message, publicKey.getGeneralPart());
 

@@ -25,6 +25,7 @@ public class Voter {
     public Voter(Integer id, Person person) {
         this.id = id;
         this.person = person;
+        this.bulletin = new Bulletin(id);
     }
 
     public void vote(Elections elections, Candidate candidate) {

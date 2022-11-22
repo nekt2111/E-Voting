@@ -10,6 +10,7 @@ import model.Key;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 public class Elections {
@@ -20,6 +21,8 @@ public class Elections {
     private List<Bulletin> bulletins;
 
     private Map<Integer, Integer> voterPublicKeyMap;
+
+    private List<Integer> votedIds;
 
     private static int MIN_AMOUNT_OF_CANDIDATES = 2;
     private static int MIN_AMOUNT_OF_VOTERS = 8;
@@ -39,27 +42,13 @@ public class Elections {
         }
     }
 
-    public void receiveCodedBulletinFromVoter(String codedBulletin, Integer voterId, Key edsPublicKey) {
-        String decodedBulletin = messageCoder.decode(codedBulletin, voterPublicKeyMap.get(voterId));
-        System.out.println("Received decoded bulletin - " + decodedBulletin);
-        if (containsVoterPublicKey(decodedBulletin, voterId)) {
-           Bulletin receivedBulletin = deserializeDecodedBulletinStr(decodedBulletin);
-
-           if (isEdsCorrect(receivedBulletin, edsPublicKey) && !wasBulletinFromVoterAlreadyReceived(receivedBulletin)) {
-               saveBulletin(receivedBulletin);
-           } else if (wasBulletinFromVoterAlreadyReceived(receivedBulletin)) {
-               System.out.println("Bulletin was already received!");
-           }
-           else {
-               System.out.println("Bulletin is ignored. Eds is not correct");
-           }
-        }
+    public Voter findVoterById(Integer voterId) {
+        return this.voters.stream().filter(voter -> Objects.equals(voter.getId(), voterId)).findFirst().get();
     }
 
+
     private boolean isEdsCorrect(Bulletin bulletin, Key publicKey) {
-        boolean result = electronicDigitalSignature.checkEds(bulletin.toPreCodedString(), bulletin.getEds(), publicKey);
-        System.out.println("Checking bulletin's eds with public key - " + publicKey + ". Result - " + result);
-        return result;
+        return true;
     }
 
     private boolean wasBulletinFromVoterAlreadyReceived(Bulletin receivedBulletin) {

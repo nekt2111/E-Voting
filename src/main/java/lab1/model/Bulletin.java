@@ -19,6 +19,10 @@ public class Bulletin {
         this.candidates = candidates;
     }
 
+    public Bulletin(Integer voterId) {
+        this.voterId = voterId;
+    }
+
     public void setEds(long[] eds) {
         if (eds != null) {
             this.eds = eds;

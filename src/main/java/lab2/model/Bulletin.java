@@ -6,21 +6,21 @@ import java.util.List;
 
 @Data
 public class Bulletin {
+
+    private Integer voterId;
     private Candidate candidate;
 
-    private long[] eds;
-
-    public Bulletin(Candidate candidate) {
+    public Bulletin(Integer voterId, Candidate candidate) {
+        this.voterId = voterId;
         this.candidate = candidate;
     }
 
-    public void setEds(long[] eds) {
-        if (eds != null) {
-            this.eds = eds;
-        }
+    @Override
+    public String toString() {
+        return candidate.getName();
     }
 
     public String toPreCodedString() {
-        return null;
+        return voterId + "." + candidate.getName();
     }
 }
