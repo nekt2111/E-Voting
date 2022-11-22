@@ -7,7 +7,9 @@ import lab1.model.Elections;
 import lab1.model.Voter;
 import message.coder.RsaCoder;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
 
@@ -16,7 +18,11 @@ public class Main {
 
         String test = "Nikita";
 
+        RsaCoder rsaCoder = new RsaCoder();
+        long[] codedMsa = rsaCoder.encode(test);
 
+        System.out.println(Arrays.toString(codedMsa));
+        System.out.println(rsaCoder.decode(codedMsa, rsaCoder.getPrivateKey()));
 
        /* List<Candidate> candidates = MockDataGenerator.getCandidates();
         List<Voter> voters = MockDataGenerator.getVoters();

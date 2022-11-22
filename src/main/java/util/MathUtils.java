@@ -14,6 +14,14 @@ public class MathUtils {
         return result;
     }
 
+    public static int gcd(int e, int z)
+    {
+        if (e == 0)
+            return z;
+        else
+            return gcd(z % e, e);
+    }
+
     public static long eulerFunction(long p, long q) {
         return (p - 1) * (q - 1);
     }
