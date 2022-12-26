@@ -51,6 +51,7 @@ public class Voter {
         signMessage(message);
         System.out.println(message);
         List<List<Integer>> coded = codeMessage(message);
+        System.out.println("Coded message - " + coded);
         sendCodedMessageToCec(coded, elections.getCec(), elections);
     }
 
@@ -75,6 +76,7 @@ public class Voter {
             System.out.println(message.toSignString());
             message.setEds(edsSignature.sign(message.toSignString(), keyPair.getPrivate()));
             this.eds = message.getEds();
+            System.out.println("Message was signed with eds - " + Arrays.toString(this.eds));
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }
@@ -82,7 +84,7 @@ public class Voter {
     }
 
     public List<List<Integer>> codeMessage(Message message) {
-        return elGamal.codeWithElGamal(message.toSignString(), elGamal.generateKeyPair().getPrivateKey());
+        return elGamal.codeWithElGamal(message.toPreCodedString(), elGamal.generateKeyPair().getPrivateKey());
     }
 
     public void sendCodedMessageToCec(List<List<Integer>> codedMessage, CentralElectionCommission cec, Elections elections) {

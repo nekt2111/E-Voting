@@ -32,6 +32,7 @@ public class CentralElectionCommission {
     }
 
     public void receiveRegistrationNumbersList(List<Integer> registrationNumbers) {
+        System.out.println("Registration numbers - " + registrationNumbers);
         this.registrationNumbers = registrationNumbers;
     }
 
@@ -60,7 +61,9 @@ public class CentralElectionCommission {
 
     public void receiveCodedMessageFromVoter(List<List<Integer>> codedMessage, ElGamalPublicKey key, PublicKey publicKey, Elections elections, byte[] eds) {
         String messageStr = decodeMessage(codedMessage, key);
+        System.out.println("Decoded message - " + messageStr);
         Message message = deserializeMessage(messageStr, elections, eds);
+        System.out.println("Deserialized message - " + message);
         if (isEdsValid(message, publicKey)) {
             processNewMessage(message);
         } else {
@@ -82,10 +85,12 @@ public class CentralElectionCommission {
     }
 
     private void removeRegistrationNumberFromList(int registrationNumber) {
+        System.out.println("Removing registration number - " + registrationNumber);
         registrationNumbers.remove(registrationNumbers.indexOf(registrationNumber));
     }
 
     private void addRegistrationNumberToListWhoVoted(int registrationNumber) {
+        System.out.println("Adding registration number - " + registrationNumber + " to list, who already voted");
         registrationNumberWhoVoted.add(registrationNumber);
     }
 
@@ -148,7 +153,8 @@ public class CentralElectionCommission {
     }
 
     public void endElections(Elections elections) {
+        System.out.println("Map who voted for whom:");
         System.out.println(voterIdCandidateMap);
-        System.out.println(getCandidateWithMostVotes());
+        System.out.println("Winner is - " + getCandidateWithMostVotes().getName());
     }
 }
