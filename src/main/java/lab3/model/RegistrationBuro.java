@@ -1,7 +1,10 @@
 package lab3.model;
 
+import lombok.Data;
+
 import java.util.*;
 
+@Data
 public class RegistrationBuro {
 
     private final Map<Integer, Integer> voterIdRegistrationNumberMap;

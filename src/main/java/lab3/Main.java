@@ -1,16 +1,31 @@
 package lab3;
 
-import javax.crypto.Cipher;
+import lab3.model.*;
+import message.coder.ElGamal;
+import message.coder.ElGamalKeyPair;
+
 import javax.crypto.NoSuchPaddingException;
 import java.security.*;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
 
-    public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException {
-        Signature signature = Signature.getInstance("DSA");
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+    public static void main(String[] args)  {
+
+        List<Candidate> candidates = MockDataGenerator.getCandidates();
+        List<Voter> voters = MockDataGenerator.voters();
+        RegistrationBuro registrationBuro = new RegistrationBuro();
+        CentralElectionCommission cec = new CentralElectionCommission();
+
+        Elections elections = cec.createElections(voters, candidates, registrationBuro);
+
+        cec.startElections(elections);
+
+        Voter voter = voters.get(0);
+        voter.vote(candidates.get(0), elections);
+
+        cec.endElections(elections);
+
+
     }
 }

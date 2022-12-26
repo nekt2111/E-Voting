@@ -1,10 +1,10 @@
-package lab2.model;
+package message.coder;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Candidate {
-    private String name;
+public class ElGamalPrivateKey {
+    private int x;
 }
