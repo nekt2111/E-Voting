@@ -28,12 +28,33 @@ public class RsaCoder {
         generateKeys();
     }
 
+<<<<<<< HEAD
     public long[] code(String message) {
+=======
+    public long[] encode(String message) {
+        RandomPrimaryNumberGenerator primaryNumberGenerator = new RandomPrimaryNumberGenerator(MAX_VALUE_OF_RANDOM_INT);
+
+        int p = primaryNumberGenerator.getRandomPrimeNumber();
+        int q = primaryNumberGenerator.getRandomPrimeNumber();
+
+        long n = MathUtils.eulerFunction(p, q);
+        long d = primaryNumberGenerator.getRandomPrimeNumber();
+
+        long e = MathUtils.getPublicPartOfKey(d, n);
+
+        privateKey = new Key(d, n);
+
+>>>>>>> 50c5e4637aa5ca06631f5a3566f1b62609c5d6db
         char[] messageCharArray = message.toCharArray();
         long[] encodedCharArray = new long[message.length()];
 
         for (int i = 0; i < messageCharArray.length; i++) {
             int m = getIndexOfCharInAlphabet(messageCharArray[i]);
+<<<<<<< HEAD
+=======
+            System.out.println(m);
+
+>>>>>>> 50c5e4637aa5ca06631f5a3566f1b62609c5d6db
             encodedCharArray[i] = MathUtils.modPow(m, e, n);
         }
 
@@ -72,10 +93,16 @@ public class RsaCoder {
     public String decode(long[] encodedMsg, Key privateKey) {
         char[] decodedMsg = new char[encodedMsg.length];
 
+<<<<<<< HEAD
         for (int i = 0; i < decodedMsg.length ; i++) {
             int indexInAlphabet = (int) MathUtils.modPow(encodedMsg[i], privateKey.getMainPart(), privateKey.getGeneralPart());
             decodedMsg[i] = alphabet[indexInAlphabet];
         }
+=======
+        System.out.println(encodedMsg[0]);
+        System.out.println(privateKey);
+        System.out.println(MathUtils.modPow(encodedMsg[0], privateKey.getMainPart(), privateKey.getGeneralPart()));
+>>>>>>> 50c5e4637aa5ca06631f5a3566f1b62609c5d6db
 
         return new String(decodedMsg);
     }

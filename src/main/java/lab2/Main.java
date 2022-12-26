@@ -15,7 +15,20 @@ public class Main {
 
     public static void main(String[] args) {
 
+<<<<<<< HEAD
         List<Candidate> candidates = MockDataGenerator.getCandidates();
+=======
+        String test = "Nikita";
+        RsaCoder coder = new RsaCoder();
+        long[] codedMsg = coder.encode(test);
+
+        System.out.println(Arrays.toString(codedMsg));
+        coder.decode(codedMsg, coder.getPrivateKey());
+
+
+
+       /* List<Candidate> candidates = MockDataGenerator.getCandidates();
+>>>>>>> 50c5e4637aa5ca06631f5a3566f1b62609c5d6db
         List<Voter> voters = MockDataGenerator.getVoters();
 
         CentralElectionCommission cec = new CentralElectionCommission();
