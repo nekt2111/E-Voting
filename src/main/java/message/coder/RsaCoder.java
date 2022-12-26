@@ -21,7 +21,7 @@ public class RsaCoder {
         this.alphabet = DataConfiguration.alphabet;
     }
 
-    public long[] encode(String message, int publicKey) {
+    public long[] encode(String message) {
         RandomPrimaryNumberGenerator primaryNumberGenerator = new RandomPrimaryNumberGenerator(MAX_VALUE_OF_RANDOM_INT);
 
         int p = primaryNumberGenerator.getRandomPrimeNumber();
@@ -39,6 +39,7 @@ public class RsaCoder {
 
         for (int i = 0; i < messageCharArray.length; i++) {
             int m = getIndexOfCharInAlphabet(messageCharArray[i]);
+            System.out.println(m);
 
             encodedCharArray[i] = MathUtils.modPow(m, e, n);
         }
@@ -49,10 +50,9 @@ public class RsaCoder {
     public String decode(long[] encodedMsg, Key privateKey) {
         char[] decodedMsg = new char[encodedMsg.length];
 
-        for (int i = 0; i < encodedMsg.length; i++) {
-            int indexInAlphabet = (int) MathUtils.modPow(encodedMsg[i], privateKey.getMainPart(), privateKey.getGeneralPart());
-            decodedMsg[i] = alphabet[indexInAlphabet];
-        }
+        System.out.println(encodedMsg[0]);
+        System.out.println(privateKey);
+        System.out.println(MathUtils.modPow(encodedMsg[0], privateKey.getMainPart(), privateKey.getGeneralPart()));
 
         return new String(decodedMsg);
     }
