@@ -11,13 +11,11 @@ public class Bulletin {
     private List<Candidate> candidates;
     private Candidate selectedCandidate;
 
-    private Integer voterId;
 
     private long[] eds;
 
-    public Bulletin(List<Candidate> candidates, Integer voterId) {
+    public Bulletin(List<Candidate> candidates) {
         this.candidates = candidates;
-        this.voterId = voterId;
     }
 
     public void selectCandidate(Candidate candidate) {
@@ -29,7 +27,7 @@ public class Bulletin {
     }
 
     public String toPreCodedString() {
-        return voterId + "." + selectedCandidate.getName();
+        return selectedCandidate.getName();
     }
 
     public void removeEds() {

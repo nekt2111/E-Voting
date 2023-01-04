@@ -66,7 +66,7 @@ public class Voter {
     }
 
     public void formBulletin(List<Candidate> candidateList, Candidate selectedCandidate) {
-        bulletin = new Bulletin(candidateList, id);
+        bulletin = new Bulletin(candidateList);
         bulletin.selectCandidate(selectedCandidate);
         System.out.println("Bulletin was formed for voter " + name);
     }
