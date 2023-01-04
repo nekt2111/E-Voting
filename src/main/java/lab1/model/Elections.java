@@ -1,7 +1,7 @@
 package lab1.model;
 
 import eds.ElectronicDigitalSignature;
-import eds.ElectronicDigitalSignatureRsa;
+import eds.ElectronicDigitalSignatureElGamal;
 import lombok.Data;
 import message.coder.GammingMessageCoder;
 import message.coder.MessageCoder;
@@ -10,7 +10,6 @@ import model.Key;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Data
 public class Elections {
@@ -27,7 +26,7 @@ public class Elections {
 
     private static MessageCoder messageCoder = new GammingMessageCoder();
 
-    private static ElectronicDigitalSignature electronicDigitalSignature = new ElectronicDigitalSignatureRsa();
+    private static ElectronicDigitalSignature electronicDigitalSignature = new ElectronicDigitalSignatureElGamal();
 
     public Elections(List<Candidate> candidates,
                      List<Voter> voters) {

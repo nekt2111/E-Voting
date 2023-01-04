@@ -1,7 +1,7 @@
 package lab1.model;
 
 import eds.ElectronicDigitalSignature;
-import eds.ElectronicDigitalSignatureRsa;
+import eds.ElectronicDigitalSignatureElGamal;
 import lombok.Data;
 import message.coder.GammingMessageCoder;
 import message.coder.MessageCoder;
@@ -20,7 +20,7 @@ public class Voter {
 
 
     private static MessageCoder messageCoder = new GammingMessageCoder();
-    private static ElectronicDigitalSignature electronicDigitalSignature = new ElectronicDigitalSignatureRsa();
+    private static ElectronicDigitalSignature electronicDigitalSignature = new ElectronicDigitalSignatureElGamal();
 
     public Voter(Integer id, Person person) {
         this.id = id;
