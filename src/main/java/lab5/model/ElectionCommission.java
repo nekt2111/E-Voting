@@ -2,8 +2,7 @@ package lab5.model;
 
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ElectionCommission {
 
@@ -12,17 +11,42 @@ public class ElectionCommission {
     private String name;
 
     private Set<Integer> voterIdsWhoSentMessage;
+    private ArrayList<SavedMessage> savedMessages;
 
-    public ElectionCommission(String name) {
+    private Integer id;
+
+    public ElectionCommission(String name, Integer id) {
         this.name = name;
+        this.id = id;
         voterIdsWhoSentMessage = new HashSet<>();
+        savedMessages = new ArrayList<>();
     }
 
     public void receiveMessage(Message message, PublicKey publicKey) {
+        System.out.println(name + " received a message - " + message);
+
         this.message = message;
         this.publicKey = publicKey;
-        System.out.println(name + " receive a message - " + message);
-        System.out.println("Check eds - " + DsaEds.verify(message.toSignStr().getBytes(StandardCharsets.UTF_8), message.getEds(), publicKey));
-        //todo: refactor add to set
+        Integer voterId = message.getVoterId();
+        byte[] encryptedBulletin = message.getEncryptedBulletin();;
+
+        byte[] messageEds = message.getEds();
+        byte[] messageBytes = message.toSignStr().getBytes(StandardCharsets.UTF_8);
+        System.out.println("Verifying eds - " + Arrays.toString(messageEds));
+
+        boolean resultOfEdsVerify = DsaEds.verify(messageBytes, messageEds, publicKey);
+        System.out.println("Result of verifying - " + resultOfEdsVerify);
+
+        if (!voterIdsWhoSentMessage.contains(voterId)) {
+            voterIdsWhoSentMessage.add(voterId);
+
+            SavedMessage savedMessage = new SavedMessage(voterId, encryptedBulletin, id);
+            savedMessages.add(savedMessage);
+        }
+    }
+
+    public List<SavedMessage> publishResults() {
+        System.out.println(savedMessages);
+        return savedMessages;
     }
 }
